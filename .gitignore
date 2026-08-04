@@ -1,0 +1,8 @@
+# Secrets & generated files - DO NOT COMMIT
+.env
+traefik/acme.json
+# Large runtime data
+data/
+# OS/editor files
+.DS_Store
+*.swp

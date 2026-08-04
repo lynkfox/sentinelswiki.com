@@ -1,0 +1,62 @@
+http:
+  middlewares:
+    ipWhitelistCloudflare:
+      ipWhiteList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "172.16.0.0/12"
+          # Cloudflare IPv4 snapshot
+          - "173.245.48.0/20"
+          - "103.21.244.0/22"
+          - "103.22.200.0/22"
+          - "103.31.4.0/22"
+          - "141.101.64.0/18"
+          - "108.162.192.0/18"
+          - "190.93.240.0/20"
+          - "188.114.96.0/20"
+          - "197.234.240.0/22"
+          - "198.41.128.0/17"
+          - "162.158.0.0/15"
+          - "104.16.0.0/12"
+          - "172.64.0.0/13"
+          - "131.0.72.0/22"
+          # Cloudflare IPv6 snapshot
+          - "2400:cb00::/32"
+          - "2606:4700::/32"
+          - "2803:f800::/32"
+          - "2405:b500::/32"
+          - "2c0f:f248::/32"
+          - "2a06:98c0::/29"
+    ratelimit_global:
+      rateLimit:
+        average: 5
+        burst: 10
+    ratelimit_api:
+      rateLimit:
+        average: 1
+        burst: 4
+    security_headers:
+      headers:
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        sslRedirect: true
+        forceSTSHeader: true
+    prevent_scrape:
+      chain:
+        middlewares:
+          - ipWhitelistCloudflare
+          - ratelimit_global
+          - security_headers
+    api_ratelimit:
+      chain:
+        middlewares:
+          - ipWhitelistCloudflare
+          - ratelimit_api
+          - security_headers
+    dashboard_ip_whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "${DASHBOARD_ADMIN_IP}"
